@@ -37,14 +37,14 @@ def mk_logger(name, level, fmt):
 # ------------------------------------------------------------------------------
 # Config
 pkg_folder = os.path.dirname(__file__)
-Cfg = configparser.ConfigParser()
-Cfg.read(os.path.join(pkg_folder, 'setting.cfg'))
+CFG = configparser.ConfigParser()
+CFG.read(os.path.join(pkg_folder, 'setting.cfg'))
 
 
 # ------------------------------------------------------------------------------
 # Logger
 kwargs = dict(
-    name=Cfg['Default']['pkgName'],
+    name=CFG['Default']['pkgName'],
     level=logging.DEBUG,
     fmt='%(asctime)s - %(levelname)s - %(message)s - (%(filename)s %(lineno)d)'
 )
@@ -53,4 +53,4 @@ logger.info('Package Initialized')
 
 # ------------------------------------------------------------------------------
 # Paths
-noisyFolder = Cfg['Default']['noisyFolder']
+noisyFolder = CFG['Default']['noisyFolder']

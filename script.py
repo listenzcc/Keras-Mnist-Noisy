@@ -6,39 +6,29 @@ Purpose: Python script of keras demo on mnist dataset.
 '''
 
 # %%
-from PIL import Image
-import numpy as np
-import keras
+import plotly.express as px
 import os
+import keras
+import numpy as np
+from PIL import Image
 from Package.MnistDataset import DataSet
 
+# %%
 data = DataSet()
-
-# %%
-
-# %%
-
+Xd, yd = data.load_pics()
+Xd.shape, yd.shape
 
 # %%
 mnist = keras.datasets.mnist.load_data()
-mnist
+(Xm, ym), (_, _) = mnist
+Xm.shape, ym.shape
 
 # %%
-mnist[0][0].shape
 
-# %%
-png_path = os.path.join(os.environ['HOME'],
-                        r'Documents/science_rcn/noisy_tests/bg_noise/0/2',
-                        'test_996.png')
 
-os.path.isfile(png_path)
+def plot(X, y):
+    fig = px.imshow(X[0])
+    fig.update_layout(title=str(y[0]))
+    return fig
 
-# %%
-img = Image.open(png_path)
-dir(img)
-
-# %%
-img.width
-# %%
-np.array(img).shape
 # %%
