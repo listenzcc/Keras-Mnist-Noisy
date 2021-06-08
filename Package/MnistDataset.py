@@ -82,9 +82,6 @@ class DataSet(object):
         Args:
         - @self
 
-        Outputs:
-        - @
-
         '''
 
         self.noises = [e for e in os.listdir(self.noisy_folder)
@@ -110,6 +107,7 @@ class DataSet(object):
             logger.debug('The noise {} is incorrect, changing it into {}'.format(
                 noise_name, self.noises[0]))
             noise_name = self.noises[0]
+        logger.info('Using the noise of {}'.format(noise_name))
 
         folder = os.path.join(self.noisy_folder, noise_name, '0')
 
