@@ -17,11 +17,13 @@ from Package.MnistDataset import DataSet
 # %%
 data = DataSet()
 Xd, yd = data.load_pics('line_deletion')
+# ((10000, 28, 28), (10000,), dtype('uint8'))
 Xd.shape, yd.shape, Xd.dtype
 
 # %%
 mnist = keras.datasets.mnist.load_data()
 (Xm, ym), (_, _) = mnist
+# ((60000, 28, 28), (60000,), dtype('uint8'))
 Xm.shape, ym.shape, Xm.dtype
 
 # %%
