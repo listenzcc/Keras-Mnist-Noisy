@@ -6,6 +6,7 @@ Purpose: Train the CNNet
 '''
 
 # %%
+import os
 import keras
 import torch
 import numpy as np
@@ -60,11 +61,13 @@ optimizer = optim.SGD(net.parameters(), **optimizer_kwargs)
 X_test_cuda = numpy2cuda(X_test.astype(np.float32)[:, np.newaxis])
 X_noisy_cuda = numpy2cuda(X_noisy.astype(np.float32)[:, np.newaxis])
 
+latest_model_path = os.path.join('CheckPoints', 'Latest.model')
+
 
 class Trainer(object):
     ''' CNNet Trainer Object '''
 
-    def __init__(self, net=net, optimizer=optimizer):
+    def __init__(self, net=net, optimizer=optimizer, path=latest_model_path):
         '''
         Method: __init__
 
@@ -74,18 +77,23 @@ class Trainer(object):
         - @self, net=net, optimizer=optimizer
 
         '''
+        if os.path.isfile(path):
+            net.load_state_dict(torch.load(path))
+            print('Loaded model from "{}"'.format(path))
+
         self.net = net
+
         self.optimizer = optimizer
         pass
 
-    def train(self, epoch_idx=0):
+    def train(self, session_idx=0):
         '''
         Method: train
 
         Training Epoch
 
         Args:
-        - @self, epoch_idx=0
+        - @self, session_idx=0
 
         '''
         n_splits = 100
@@ -115,8 +123,8 @@ class Trainer(object):
                 p3 = cuda2numpy(output3.data.max(1)[1])
                 acc3 = metrics.accuracy_score(y_noisy, p3)
 
-                print('Train Epoch: {} [{}/{}]\tLoss: {:.4f}\tAcc: {:.4f}, {:.4f}, {:.4f}'.format(
-                    epoch_idx,
+                print('Training Session: {} [{:6d}/{:6d}]\tLoss: {:.4f}\tAcc: {:.4f}, {:.4f}, {:.4f}'.format(
+                    session_idx,
                     (batch_idx+1) * len(y),
                     len(y_train),
                     loss.item(),
@@ -127,13 +135,19 @@ class Trainer(object):
 
             batch_idx += 1
 
+        torch.save(net.state_dict(),
+                   os.path.join('CheckPoints', 'S-{}.model'.format(session_idx)))
+
+        torch.save(net.state_dict(),
+                   os.path.join('CheckPoints', 'Latest.model'))
+
         pass
 
 
 trainer = Trainer()
 
 # %%
-for epoch_idx in range(20):
-    trainer.train(epoch_idx)
+for session_idx in range(20):
+    trainer.train(session_idx)
 
 # %%
